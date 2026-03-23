@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💖 V-Day</title>
+<title>💖 Love Page</title>
 
 <style>
 body {
@@ -12,9 +12,9 @@ body {
     background: #0f172a;
     color: white;
     overflow: hidden;
+    transition: background 1s ease;
 }
 
-/* screens */
 .screen {
     position: absolute;
     width: 100%;
@@ -25,11 +25,8 @@ body {
     flex-direction: column;
 }
 
-.hidden {
-    display: none;
-}
+.hidden { display: none; }
 
-/* button */
 button {
     padding: 12px 24px;
     font-size: 18px;
@@ -39,7 +36,9 @@ button {
     margin: 10px;
 }
 
-/* hearts */
+#yesBtn { background:#00c853; color:white; }
+#noBtn { background:#d50000; color:white; position:relative; }
+
 .heart {
     position: fixed;
     bottom: -20px;
@@ -48,42 +47,36 @@ button {
 }
 
 @keyframes floatUp {
-    0% { transform: translateY(0); opacity: 1; }
-    100% { transform: translateY(-110vh); opacity: 0; }
+    0% { transform: translateY(0); opacity:1; }
+    100% { transform: translateY(-110vh); opacity:0; }
 }
 
-/* photo */
-#photo {
-    width: 250px;
+#photos img {
+    width: 200px;
+    margin: 10px;
     border-radius: 15px;
-    margin-top: 20px;
-    box-shadow: 0 0 20px black;
     display: none;
     animation: fadeIn 1s ease;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.8); }
-    to { opacity: 1; transform: scale(1); }
-}
-
-#noBtn {
-    position: relative;
+    from {opacity:0; transform:scale(0.8);}
+    to {opacity:1; transform:scale(1);}
 }
 </style>
 </head>
 
 <body>
 
-<!-- 💖 START SCREEN -->
+<!-- START -->
 <div id="startScreen" class="screen">
-    <h1>💖 Welcome</h1>
+    <h1>💖 Start</h1>
     <button onclick="startApp()">Start</button>
 </div>
 
-<!-- 💌 QUESTION SCREEN -->
+<!-- QUESTION -->
 <div id="questionScreen" class="screen hidden">
-    <h1 id="questionText">Сен мені ҰНнатасын ба? 💖</h1>
+    <h1 id="text">Сен мені жақсы көресің бе? 💖</h1>
 
     <div>
         <button id="yesBtn">Иә</button>
@@ -91,13 +84,18 @@ button {
     </div>
 </div>
 
-<!-- 🎉 FINAL SCREEN -->
+<!-- FINAL -->
 <div id="finalScreen" class="screen hidden">
-    <h1>Урааа! ❤️ Мен де сені жақсы көремін!</h1>
-    <img id="photo" src="me.jpg">
+    <h1>Урааа! ❤️</h1>
+
+    <div id="photos">
+        <img src="me.jpg">
+        <img src="me.jpg">
+        <img src="me.jpg">
+    </div>
 </div>
 
-<!-- 🎵 MUSIC -->
+<!-- MUSIC -->
 <audio id="music" loop>
     <source src="suluym.mp3" type="audio/mpeg">
 </audio>
@@ -109,11 +107,14 @@ const finalScreen = document.getElementById("finalScreen");
 
 const yesBtn = document.getElementById("yesBtn");
 const noBtn = document.getElementById("noBtn");
+const text = document.getElementById("text");
 const music = document.getElementById("music");
+const photos = document.querySelectorAll("#photos img");
 
-const questionText = document.getElementById("questionText");
-const photo = document.getElementById("photo");
+let yesSize = 18;
+let phraseIndex = 0;
 
+/* ✅ сен берген толық тізім */
 const phrases = [
     "Жоқ",
     "Сенімдісің бе? 🤨",
@@ -126,57 +127,53 @@ const phrases = [
     "Сүйіттін ғо ия",
     "Қайта ойланып көрсей!",
     "Жасылды басасын!"
-    
-    
 ];
 
-let phraseIndex = 0;
+/* hearts */
+function createHeart(){
+    const h = document.createElement("div");
+    h.classList.add("heart");
+    h.innerText="💖";
+    h.style.left=Math.random()*100+"vw";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),6000);
+}
+setInterval(createHeart,300);
 
-/* 🎬 start app */
-function startApp() {
+/* start */
+function startApp(){
     startScreen.classList.add("hidden");
     questionScreen.classList.remove("hidden");
-
     music.play();
-
-    createHearts();
 }
 
-/* 💓 hearts */
-function createHearts() {
-    setInterval(() => {
-        const heart = document.createElement("div");
-        heart.classList.add("heart");
-        heart.innerText = "💖";
-        heart.style.left = Math.random() * 100 + "vw";
-        document.body.appendChild(heart);
+/* NO */
+noBtn.addEventListener("click", ()=>{
 
-        setTimeout(() => heart.remove(), 6000);
-    }, 300);
-}
-
-/* 😈 NO BUTTON */
-noBtn.addEventListener("click", () => {
-
-    noBtn.innerText = phrases[phraseIndex];
+    text.innerText = phrases[phraseIndex];
     phraseIndex = (phraseIndex + 1) % phrases.length;
 
-    const x = Math.random() * 300 - 150;
-    const y = Math.random() * 300 - 150;
-    noBtn.style.transform = `translate(${x}px, ${y}px)`;
+    // yes grows
+    yesSize += 6;
+    yesBtn.style.fontSize = yesSize + "px";
 
-    yesBtn.style.fontSize = (parseInt(window.getComputedStyle(yesBtn).fontSize) + 2) + "px";
+    // no moves
+    const x = Math.random()*300 - 150;
+    const y = Math.random()*200 - 100;
+    noBtn.style.transform = `translate(${x}px, ${y}px)`;
 });
 
-/* 💖 YES BUTTON */
-yesBtn.addEventListener("click", () => {
+/* YES */
+yesBtn.addEventListener("click", ()=>{
 
     questionScreen.classList.add("hidden");
     finalScreen.classList.remove("hidden");
 
-    document.body.style.background = "linear-gradient(135deg,#ff4d6d,#ffb3c1)";
+    document.body.style.background =
+        "linear-gradient(135deg,#ff4d6d,#ffb3c1)";
 
-    photo.style.display = "block";
+    // show photos
+    photos.forEach(p => p.style.display="inline-block");
 });
 </script>
 
