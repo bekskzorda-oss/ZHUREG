@@ -51,12 +51,14 @@ button {
     100% { transform: translateY(-110vh); opacity:0; }
 }
 
+/* photos */
 #photos img {
-    width: 200px;
+    width: 180px;
     margin: 10px;
     border-radius: 15px;
     display: none;
     animation: fadeIn 1s ease;
+    box-shadow: 0 0 20px rgba(0,0,0,0.6);
 }
 
 @keyframes fadeIn {
@@ -86,12 +88,12 @@ button {
 
 <!-- FINAL -->
 <div id="finalScreen" class="screen hidden">
-    <h1>Урааа! ❤️</h1>
+    <h1>Урааа! Мен де сені жақсы көремін! ❤️✨</h1>
 
     <div id="photos">
-        <img src="me.jpg">
-        <img src="me.jpg">
-        <img src="me.jpg">
+        <img src="photo1.jpg">
+        <img src="photo2.jpg">
+        <img src="photo3.jpg">
     </div>
 </div>
 
@@ -109,12 +111,13 @@ const yesBtn = document.getElementById("yesBtn");
 const noBtn = document.getElementById("noBtn");
 const text = document.getElementById("text");
 const music = document.getElementById("music");
+
 const photos = document.querySelectorAll("#photos img");
 
 let yesSize = 18;
 let phraseIndex = 0;
 
-/* ✅ сен берген толық тізім */
+/* phrases */
 const phrases = [
     "Жоқ",
     "Сенімдісің бе? 🤨",
@@ -147,23 +150,21 @@ function startApp(){
     music.play();
 }
 
-/* NO */
+/* NO button */
 noBtn.addEventListener("click", ()=>{
 
     text.innerText = phrases[phraseIndex];
     phraseIndex = (phraseIndex + 1) % phrases.length;
 
-    // yes grows
     yesSize += 6;
     yesBtn.style.fontSize = yesSize + "px";
 
-    // no moves
     const x = Math.random()*300 - 150;
     const y = Math.random()*200 - 100;
     noBtn.style.transform = `translate(${x}px, ${y}px)`;
 });
 
-/* YES */
+/* YES button */
 yesBtn.addEventListener("click", ()=>{
 
     questionScreen.classList.add("hidden");
